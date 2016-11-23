@@ -29,10 +29,10 @@ $(function() {
         //  #8 - loops through allFeeds to check for urls
         it('have non-empty URLs', function() {
             allFeeds.forEach(function(feedSource) {
-              // url property exists for each feed source
-              expect(feedSource.url).toBeDefined();
-              // the url is not empty
-              expect(feedSource.url.length).not.toBe(0);
+                // url property exists for each feed source
+                expect(feedSource.url).toBeDefined();
+                // the url is not empty
+                expect(feedSource.url.length).not.toBe(0);
             });
         });
 
@@ -40,14 +40,12 @@ $(function() {
         it('have non-empty names', function() {
             // same as url loop but looking for name
             allFeeds.forEach(function(feedSource) {
-              expect(feedSource.name).toBeDefined();
-              expect(feedSource.name.length).not.toBe(0);
-            })
+                expect(feedSource.name).toBeDefined();
+                expect(feedSource.name.length).not.toBe(0);
+            });
         });
     });
 
-
-    /* TODO: Write a new test suite named "The menu" */
     // #10
     describe('The menu', function() {
         // #11 - menu element is hidden? (has class menu-hidden)
@@ -64,6 +62,7 @@ $(function() {
             //   $('.menu-icon-link').trigger('click');
             //   expect($('body').hasClass('menu-hidden')).toBe(true);
             // };
+            // opens the menu; use else if? ^^
 
             // first click
             $('.menu-icon-link').trigger('click');
@@ -76,20 +75,46 @@ $(function() {
         });
     });
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+    // #13
+    describe('Initial Entries', function() {
+        // #14 - check for entries AFTER async load
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                done();
+                // loadFeed id is the index, cb is callback or done (as in addressbook project)
+            });
+        });
+        it('contain at least 1 element', function(done) {
+            // checks to see if the count of containers with class entry is > 0
+            expect($('.entry').length).toBeGreaterThan(0);
+            done();
+        });
+    });
 
+    // #15
+    describe('New Feed Selection', function() {
+        // #16 - check for content change on loadFeed call
+        // create 2 variables to hold feed data for comparison
+        var initialFirst;
+        var loadedFirst;
+        // runs through 2 feed loads and saves text from the first article's title (stored in h2)
+        beforeEach(function(done) {
+            // start with 1 so it ends up showing content from 0
+            loadFeed(1, function() {
+                loadedFirst = $('h2:first').text();
+                // end with 0 so it shows this content
+                // this is only working if it is inside the first loadFeed - undefined if it's placed elsewhere
+                loadFeed(0, function() {
+                    initialFirst = $('h2:first').text();
+                    done();
+                });
+            });
+        });
+        it('gives new feeds', function(done) {
+            // compares the titles from the first entries to see if different
+            expect(loadedFirst).not.toBe(initialFirst);
+            done();
+        });
+    });
 
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
-         */
-
-    /* TODO: Write a new test suite named "New Feed Selection"
-
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
 }());
