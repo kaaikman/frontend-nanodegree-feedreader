@@ -79,15 +79,12 @@ $(function() {
     describe('Initial Entries', function() {
         // #14 - check for entries AFTER async load
         beforeEach(function(done) {
-            loadFeed(0, function() {
-                done();
-                // loadFeed id is the index, cb is callback or done (as in addressbook project)
-            });
+            loadFeed(0, done);
+            // loadFeed id is the index, cb is callback or done (as in addressbook project)
         });
-        it('contain at least 1 element', function(done) {
+        it('contain at least 1 element', function() {
             // checks to see if the count of containers with class entry is > 0
-            expect($('.entry').length).toBeGreaterThan(0);
-            done();
+            expect($('.feed .entry').length).toBeGreaterThan(0);
         });
     });
 
